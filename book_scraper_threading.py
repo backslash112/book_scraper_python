@@ -4,7 +4,6 @@ import threading
 from multiprocessing.pool import ThreadPool
 import queue
 
-
 # Get the next page url from the current page url
 def get_next_page_url(url):
     page = urlopen(url)
@@ -54,23 +53,17 @@ def run():
     book_info_list = []
 
     def scapping_by_page(book_detail_urls):
-
         qs = []
         for book_detail_url in book_detail_urls:
-            # book_info = get_book_detail_info(book_detail_url)
-
-            # thr = threading.Thread(target=get_book_detail_info, args=(book_detail_url,))
-            # thr.start()
-
             # Get the return value from the thread
             q = queue.Queue()
             thr = threading.Thread(target=get_book_detail_info, args=(book_detail_url, q))
             thr.start()
             qs.append(q)
-
         for q in qs:
             book_info = q.get()
             print(book_info)
+            book_info_list.append(book_info)
 
     def scapping(page_url):
         print(page_url)
@@ -84,6 +77,7 @@ def run():
             return
 
     scapping(url)
+    print(len(book_info_list))
 
 
 run()
