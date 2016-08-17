@@ -34,7 +34,7 @@ def get_book_detail_urls(url):
 
 
 # Get the book detail info by book detail url
-def get_book_detail_info(url):
+def get_book_detail_info(url, q):
     print(url)
     page = urlopen(url)
     book_detail_soup = BeautifulSoup(page, 'lxml')
@@ -45,7 +45,8 @@ def get_book_detail_info(url):
     isbn_tag = isbn_key_tag.find_next_sibling()
     isbn = isbn_tag.string.strip() # Remove the whitespace with the strip method
     book_info = { 'title': title, 'isbn': isbn }
-    print(book_info)
+    # print(book_info)
+    q.put(book_info)
 
 
 def run():
@@ -53,12 +54,23 @@ def run():
     book_info_list = []
 
     def scapping_by_page(book_detail_urls):
+
+        qs = []
         for book_detail_url in book_detail_urls:
             # book_info = get_book_detail_info(book_detail_url)
-            thr = threading.Thread(target=get_book_detail_info, args=(book_detail_url,))
+
+            # thr = threading.Thread(target=get_book_detail_info, args=(book_detail_url,))
+            # thr.start()
+
+            # Get the return value from the thread
+            q = queue.Queue()
+            thr = threading.Thread(target=get_book_detail_info, args=(book_detail_url, q))
             thr.start()
-            # print(book_info)
-            # book_info_list.append(book_info)
+            qs.append(q)
+
+        for q in qs:
+            book_info = q.get()
+            print(book_info)
 
     def scapping(page_url):
         print(page_url)
