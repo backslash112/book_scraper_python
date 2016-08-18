@@ -3,6 +3,7 @@ from urllib.request import urlopen
 import threading
 from multiprocessing.pool import ThreadPool
 import queue
+import csv
 
 # Get the next page url from the current page url
 def get_next_page_url(url):
@@ -42,9 +43,9 @@ def get_book_detail_info(url, q):
     title = title_tag.string
     isbn_key_tag = book_detail_soup.find(text="Isbn:").parent
     isbn_tag = isbn_key_tag.find_next_sibling()
-    isbn = isbn_tag.string.strip() # Remove the whitespace with the strip method
-    book_info = { 'title': title, 'isbn': isbn }
-    # print(book_info)
+    isbn = isbn_tag.string.strip() # Remove the whitespace with the strip() method
+    # book_info = { 'title': title, 'isbn': isbn }
+    book_info =  [title, isbn]
     q.put(book_info)
 
 
@@ -78,6 +79,12 @@ def run():
 
     scapping(url)
     print(len(book_info_list))
+    save_to_csv(book_info_list)
 
+def save_to_csv(list):
+    with open('books.csv', 'w', newline='') as fp:
+        a = csv.writer(fp, delimiter=',')
+        a.writerow(['title','isbn'])
+        a.writerows(list)
 
 run()

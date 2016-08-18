@@ -59,4 +59,10 @@ def run():
 
     scapping(url)
     print(len(book_info_list))
+    save(book_info_list)
+
+
+
+
+
 run()
