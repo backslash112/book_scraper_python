@@ -34,7 +34,7 @@ def get_book_detail_urls(url):
 
 # Get the book detail info by book detail url
 def get_book_detail_info(url, q):
-    print(url)
+    # print(url)
     page = urlopen(url)
     book_detail_soup = BeautifulSoup(page, 'lxml')
     page.close()

@@ -47,7 +47,7 @@ def run():
     def scapping(page_url):
         book_detail_urls = get_book_detail_urls(page_url)
         for book_detail_url in book_detail_urls:
-            print(book_detail_url)
+            # print(book_detail_url)
             book_info = get_book_detail_info(book_detail_url)
             print(book_info)
             book_info_list.append(book_info)
